@@ -21,20 +21,21 @@ public class ApplicationStart extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		Scene scene = getScene("fxml_example");
+		Scene scene = getScene("createAccScene");
 		primaryStage.setScene(scene);
+		primaryStage.setResizable(false);
 		primaryStage.show();
 
 	}
 
 	// Fast upload fxml files
 	private String fxmlFileFromTemplates(String fileName) throws MalformedURLException {
-		return "/templates/" + fileName + ".fxml";
+		return "/scenes/" + fileName + ".fxml";
 	}
 
 	private Scene getScene(String namePage) throws IOException {
 		Parent root = FXMLLoader.load(getClass().getResource(fxmlFileFromTemplates(namePage)));
-		Scene scene = new Scene(root);
+		Scene scene = new Scene(root, 800, 600);
 		return scene;
 	}
 }
