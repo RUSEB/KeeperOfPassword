@@ -3,4 +3,4 @@
 .settings
 .mvn
 .maven
-.class
+*.class
