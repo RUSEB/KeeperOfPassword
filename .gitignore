@@ -4,3 +4,4 @@
 .mvn
 .maven
 *.class
+target/
