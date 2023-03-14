@@ -7,7 +7,7 @@ import javafx.scene.Parent;
 
 public class TemplateGetter {
 
-	protected String fxmlFileFromResources(String fileName) {
+	private String fxmlFileFromResources(String fileName) {
 		return "/templates/" + fileName + ".fxml";
 	}
 

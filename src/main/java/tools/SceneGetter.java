@@ -10,7 +10,7 @@ import javafx.scene.Scene;
 //Fast upload fxml files from scene
 public class SceneGetter {
 
-	protected String fxmlFileFromResources(String fileName) {
+	private String fxmlFileFromResources(String fileName) {
 		return "/scenes/" + fileName + ".fxml";
 	}
 
