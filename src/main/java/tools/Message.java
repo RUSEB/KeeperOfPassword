@@ -7,9 +7,29 @@ public class Message {
 
 	static String cp = System.getProperty("console.encoding", "UTF-8");
 
-	public static void print(String msg) {
+	public static void println(String msg) {
 
 		msg += "\n";
+		byte[] b;
+
+		try {
+			b = msg.getBytes(cp);
+		} catch (UnsupportedEncodingException e) {
+			b = msg.getBytes();
+
+		}
+		try {
+			System.out.write(b);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public static void print(String msg) {
+
+		msg += " ";
 		byte[] b;
 
 		try {
