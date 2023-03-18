@@ -6,8 +6,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
+import objects.User;
 import tools.Message;
 import tools.PropertiesGetter;
 
@@ -21,6 +24,10 @@ public class BaseController {
 	private static final String DB_USER;
 	private static final String DB_PASSWORD;
 
+	private static final BaseController baseController = new BaseController();
+	private Connection connection = null;
+	private Statement st = null;
+	
 	static {
 		try {
 			properties.load(PropertiesGetter.getFilePropetrie(DB_PROPERTIES));
@@ -35,8 +42,12 @@ public class BaseController {
 
 	}
 
-	public BaseController() {
+	private BaseController() {
 	};
+	
+	public static BaseController getBaseController() {
+		return baseController;
+	}
 
 	public static void main(String[] args) {
 		BaseController conn = new BaseController();
@@ -45,7 +56,7 @@ public class BaseController {
 
 	public void checkDB() {
 		try {
-			Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			connection = getConnection();
 			Statement st = connection.createStatement();
 
 			try {
@@ -54,12 +65,12 @@ public class BaseController {
 			} catch (Exception e) {
 				st.execute(		
 						"CREATE TABLE users(" 
-						+"USER_ID INTEGER AUTO_INCREMENT PRIMARY KEY,"
-						+"user VARCHAR(30)," + "name VARCHAR(50)," 
+						+"USER_ID INTEGER PRIMARY KEY AUTOINCREMENT,"
+						+"user VARCHAR(30),"
 						+"userMainPassword VARCHAR(50));");
 				st.execute(
 						"CREATE TABLE passwords(" 
-						+ "PASSWORD_ID INTEGER AUTO_INCREMENT PRIMARY KEY,"
+						+ "PASSWORD_ID INTEGER PRIMARY KEY AUTOINCREMENT,"
 						+ "description VARCHAR(100),"
 						+ "name VARCHAR(50)," + "login VARCHAR(50),"
 						+ "password VARCHAR(50),"
@@ -77,6 +88,45 @@ public class BaseController {
 			e.printStackTrace();
 		}
 
+	}
+	
+	public int countUsers() {
+		int count = 0;
+		try {
+			connection = getConnection();
+			st = connection.createStatement();
+			try {
+				ResultSet r = st.executeQuery("SELECT * FROM users");
+				
+				while(r.next()) {
+					count+=1;
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		return count;
+	}
+	
+	
+	public Connection getConnection() throws SQLException {
+		return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+	}
+	
+	public List<User> getUsers() throws SQLException {
+		List<User> users = new ArrayList();
+		connection = getConnection();
+		st = connection.createStatement();
+		ResultSet r = st.executeQuery("SELECT * FROM users");
+		while(r.next()) {
+			users.add(new User(r.getString(1),r.getString(2)));
+		}
+		
+		return users;
 	}
 
 }
