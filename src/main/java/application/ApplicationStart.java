@@ -1,6 +1,11 @@
 package application;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+
+import dataBaseController.BaseController;
 import javafx.application.Application;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import tools.Message;
@@ -11,20 +16,30 @@ public class ApplicationStart extends Application {
 	private Scene mainScene;
 	private Scene passScene;
 
+	private BaseController baseController = BaseController.getBaseController();
 	public static void main(String[] args) {
 		launch();
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-
-		Scene scene = new SceneGetter().getResource("mainScene");
-		primaryStage.setScene(scene);
+		baseController.checkDB();
+		
+		primaryStage.setScene(getStartScene());
 		primaryStage.setResizable(false);
 		primaryStage.show();
 		Message.print("Запуск");
-		System.out.print("Launch");
 
+		
+
+	}
+	private Scene getStartScene() throws MalformedURLException, IOException {
+		if(baseController.countUsers()==0) {
+			return new SceneGetter().getResource("createAccSceneWithoutBackButton");
+		}else 
+			{	
+			return new SceneGetter().getResource("choiceUser");
+			}
 	}
 
 }
