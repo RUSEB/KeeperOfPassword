@@ -11,11 +11,12 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import tools.Message;
 import tools.TemplateGetter;
 
-public class mainSceneController extends SplitPane implements Initializable {
+public class MainSceneController extends StackPane implements Initializable {
 
 	@FXML
 	private Button createButton;
@@ -30,8 +31,8 @@ public class mainSceneController extends SplitPane implements Initializable {
 
 	private EventHandler<MouseEvent> createNewField = new EventHandler<MouseEvent>() {
 
-		@Override
 		public void handle(MouseEvent event) {
+
 			try {
 				Parent newField = new TemplateGetter().getResource("templateFieldPassword");
 				BoxForPasswords.getChildren().add(newField);
@@ -40,7 +41,9 @@ public class mainSceneController extends SplitPane implements Initializable {
 				e.printStackTrace();
 			}
 			Message.print(Integer.toString(BoxForPasswords.getChildren().size()));
+
 		}
+
 	};
 
 }
