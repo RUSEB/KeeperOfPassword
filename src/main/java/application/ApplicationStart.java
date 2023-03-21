@@ -13,9 +13,11 @@ import tools.SceneGetter;
 
 public class ApplicationStart extends Application {
 
+	private static Stage stage;
 	private Scene mainScene;
 	private Scene passScene;
-
+	private String currentUser;
+	
 	private BaseController baseController = BaseController.getBaseController();
 	public static void main(String[] args) {
 		launch();
@@ -24,7 +26,7 @@ public class ApplicationStart extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		baseController.checkDB();
-		
+		this.stage = primaryStage;
 		primaryStage.setScene(getStartScene());
 		primaryStage.setResizable(false);
 		primaryStage.show();
@@ -41,5 +43,12 @@ public class ApplicationStart extends Application {
 			return new SceneGetter().getResource("choiceUser");
 			}
 	}
+	
+	public static void changeScene(String nameScene) throws MalformedURLException, IOException {
+		stage.setScene(new SceneGetter().getResource(nameScene));
+	}
 
+	public void setUser(String user) {
+		this.currentUser = user;
+	}
 }
