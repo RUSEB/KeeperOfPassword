@@ -25,11 +25,11 @@ public class MainSceneController extends StackPane implements Initializable {
 	private VBox BoxForPasswords;
 
 	public void initialize(URL location, ResourceBundle resources) {
-		createButton.addEventHandler(MouseEvent.MOUSE_CLICKED, createNewField);
+		createButton.addEventHandler(MouseEvent.MOUSE_CLICKED, createNewPasswordEventHandler);
 
 	}
 
-	private EventHandler<MouseEvent> createNewField = new EventHandler<MouseEvent>() {
+	private EventHandler<MouseEvent> createNewPasswordEventHandler = new EventHandler<MouseEvent>() {
 
 		public void handle(MouseEvent event) {
 
