@@ -16,7 +16,9 @@ public class ApplicationStart extends Application {
 	private static Stage stage;
 	private Scene mainScene;
 	private Scene passScene;
-	private String currentUser;
+	
+	
+	private static String currentUser;
 	
 	private BaseController baseController = BaseController.getBaseController();
 	public static void main(String[] args) {
@@ -48,7 +50,10 @@ public class ApplicationStart extends Application {
 		stage.setScene(new SceneGetter().getResource(nameScene));
 	}
 
-	public void setUser(String user) {
-		this.currentUser = user;
+	public static void setUser(String user) {
+		currentUser = user;
+	}
+	public static String getUser() {
+		return currentUser;
 	}
 }
