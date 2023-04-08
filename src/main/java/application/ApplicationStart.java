@@ -18,22 +18,22 @@ public class ApplicationStart extends Application {
 	private Scene passScene;
 	
 	
+	private static String currentUserID;
 	private static String currentUser;
 	
-	private BaseController baseController = BaseController.getBaseController();
+	private static BaseController baseController = BaseController.getBaseController();
 	public static void main(String[] args) {
 		launch();
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		baseController.checkDB();
+		//baseController.checkDB();
 		this.stage = primaryStage;
 		primaryStage.setScene(getStartScene());
 		primaryStage.setResizable(false);
 		primaryStage.show();
 		Message.print("Запуск");
-
 		
 
 	}
@@ -55,5 +55,9 @@ public class ApplicationStart extends Application {
 	}
 	public static String getUser() {
 		return currentUser;
+	}
+	
+	public static String getUserID() {
+		return baseController.getUserID(currentUser);
 	}
 }
