@@ -28,6 +28,8 @@ public class InsertUser {
 			preparedStatement.setString(1, user);
             preparedStatement.setString(2, password);
             preparedStatement.execute();
+            connection.close();
+            preparedStatement.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
