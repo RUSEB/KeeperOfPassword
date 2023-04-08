@@ -1,8 +1,10 @@
 package dataBaseController;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -10,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import application.ApplicationStart;
+import objects.Password;
 import objects.User;
 import tools.Message;
 import tools.PropertiesGetter;
@@ -28,11 +32,14 @@ public class BaseController {
 	private Connection connection = null;
 	private Statement st = null;
 	
-	static {
+		static {
 		try {
 			properties.load(PropertiesGetter.getFilePropetrie(DB_PROPERTIES));
-
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		JDBC_DRIVER = properties.getProperty("db.driver");
@@ -42,23 +49,16 @@ public class BaseController {
 
 	}
 
-	private BaseController() {
-	};
+	private BaseController() {};
 	
 	public static BaseController getBaseController() {
 		return baseController;
-	}
-
-	public static void main(String[] args) {
-		BaseController conn = new BaseController();
-		conn.checkDB();
 	}
 
 	public void checkDB() {
 		try {
 			connection = getConnection();
 			Statement st = connection.createStatement();
-
 			try {
 				ResultSet r = st.executeQuery("SELECT * FROM passwords");
 				Message.println("База уже существует");
@@ -79,10 +79,11 @@ public class BaseController {
 				
 				
 				Message.print("База данных не была найдена, создана новая");
+				
 			}
-
 			connection.close();
 			st.close();
+		
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -95,15 +96,12 @@ public class BaseController {
 		try {
 			connection = getConnection();
 			st = connection.createStatement();
-			try {
 				ResultSet r = st.executeQuery("SELECT * FROM users");
-				
 				while(r.next()) {
 					count+=1;
 				}
-			}catch(Exception e){
-				e.printStackTrace();
-			}
+			connection.close();
+			st.close();
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -119,14 +117,44 @@ public class BaseController {
 	
 	public List<User> getUsers() throws SQLException {
 		List<User> users = new ArrayList();
-		connection = getConnection();
-		st = connection.createStatement();
+		Connection c = getConnection();
+		st = c.createStatement();
 		ResultSet r = st.executeQuery("SELECT * FROM users");
 		while(r.next()) {
 			users.add(new User(r.getString(1),r.getString(2)));
 		}
+		c.close();
+		st.close();
 		
 		return users;
 	}
 
+	public String getUserID(String user) {
+		String userID = "";
+		try {
+			connection = getConnection();
+			PreparedStatement st = connection.prepareStatement("SELECT USER_ID FROM users WHERE user = ?");
+			st.setString(1, user);
+			ResultSet r = st.executeQuery();
+			userID = r.getString(1);
+			connection.close();
+			st.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return userID;
+		
+	}
+	public List<Password> getCurrentUsersPasswords() throws SQLException{
+		List<Password> passwords = new ArrayList<>();
+		connection = getConnection();
+		PreparedStatement st = connection.prepareStatement("SELECT * FROM passwords WHERE USER_ID = ?");
+		st.setString(1, getUserID(ApplicationStart.getUser()));
+		ResultSet r = st.executeQuery();
+		while(r.next()) {
+			passwords.add(new Password(r.getString(3),r.getString(4),r.getString(5),r.getString(6),r.getString(2)));
+		}
+		return passwords;
+	}
 }
